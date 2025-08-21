@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_dynamic_rule_table
+      author: system
+      changes:
+        - createTable:
+            tableName: dynamic_rule
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: product_name
+                  type: varchar(255)
+              - column:
+                  name: product_id
+                  type: uuid
+              - column:
+                  name: product_text
+                  type: text
+              - column:
+                  name: rule
+                  type: jsonb
