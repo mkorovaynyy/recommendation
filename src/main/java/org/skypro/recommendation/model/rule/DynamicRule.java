@@ -27,44 +27,19 @@ public class DynamicRule {
     @Column(columnDefinition = "jsonb")
     private List<RuleQuery> rule;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "counter")
+    private Long counter = 0L;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public UUID getProductId() {
-        return productId;
-    }
-
-    public void setProductId(UUID productId) {
-        this.productId = productId;
-    }
-
-    public String getProductText() {
-        return productText;
-    }
-
-    public void setProductText(String productText) {
-        this.productText = productText;
-    }
-
-    public List<RuleQuery> getRule() {
-        return rule;
-    }
-
-    public void setRule(List<RuleQuery> rule) {
-        this.rule = rule;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public UUID getProductId() { return productId; }
+    public void setProductId(UUID productId) { this.productId = productId; }
+    public String getProductText() { return productText; }
+    public void setProductText(String productText) { this.productText = productText; }
+    public List<RuleQuery> getRule() { return rule; }
+    public void setRule(List<RuleQuery> rule) { this.rule = rule; }
+    public Long getCounter() { return counter; }
+    public void setCounter(Long counter) { this.counter = counter; }
 }

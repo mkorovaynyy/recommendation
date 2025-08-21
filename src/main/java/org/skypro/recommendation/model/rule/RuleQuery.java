@@ -7,7 +7,6 @@ public class RuleQuery {
     private List<String> arguments;
     private boolean negate;
 
-    // Getters and setters
     public String getQuery() { return query; }
     public void setQuery(String query) { this.query = query; }
     public List<String> getArguments() { return arguments; }

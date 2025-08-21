@@ -1,7 +1,6 @@
 package org.skypro.recommendation.service;
 
 import org.skypro.recommendation.model.dto.Recommendation;
-import org.skypro.recommendation.model.entity.Product;
 import org.skypro.recommendation.model.rule.DynamicRule;
 import org.skypro.recommendation.model.rule.RuleQuery;
 import org.skypro.recommendation.repository.ProductRepository;
@@ -94,7 +93,14 @@ public class RecommendationService {
 
     private List<Recommendation> getDynamicRecommendations(UUID userId) {
         return dynamicRuleRepository.findAll().stream()
-                .filter(rule -> matchesDynamicRule(userId, rule))
+                .filter(rule -> {
+                    boolean matches = matchesDynamicRule(userId, rule);
+                    if (matches) {
+                        rule.setCounter(rule.getCounter() + 1);
+                        dynamicRuleRepository.save(rule);
+                    }
+                    return matches;
+                })
                 .map(rule -> new Recommendation(
                         rule.getProductName(),
                         rule.getProductId().toString(),
