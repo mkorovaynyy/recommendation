@@ -13,7 +13,6 @@ public class Recommendation {
         this.text = text;
     }
 
-    // Getters and Setters
     public String getName() {
         return name;
     }

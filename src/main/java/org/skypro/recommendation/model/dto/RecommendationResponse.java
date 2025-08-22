@@ -13,7 +13,7 @@ public class RecommendationResponse {
         this.recommendations = recommendations;
     }
 
-    // Getters and Setters
+
     public String getUserId() {
         return userId;
     }
