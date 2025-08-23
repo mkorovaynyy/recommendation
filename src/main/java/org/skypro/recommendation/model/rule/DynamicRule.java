@@ -7,6 +7,10 @@ import org.hibernate.annotations.Type;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сущность динамического правила рекомендаций
+ * Хранит информацию о правиле, продукте и счетчике срабатываний
+ */
 @Entity
 @Table(name = "dynamic_rule")
 public class DynamicRule {

@@ -6,14 +6,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+/**
+ * Сервис для работы с базой знаний
+ * Предоставляет методы для проверки условий правил рекомендаций с кэшированием
+ */
 @Service
 public class KnowledgeBaseService {
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     * Конструктор сервиса базы знаний
+     *
+     * @param jdbcTemplate JdbcTemplate для работы с БД
+     */
     public KnowledgeBaseService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Проверка, является ли пользователь пользователем продукта
+     *
+     * @param productType тип продукта
+     * @param userId      идентификатор пользователя
+     * @return true если пользователь является пользователем продукта
+     */
     @Cacheable("userOfCache")
     public boolean userOf(String productType, UUID userId) {
         String sql = "SELECT COUNT(*) > 0 FROM transactions t " +
@@ -23,6 +39,13 @@ public class KnowledgeBaseService {
                 sql, Boolean.class, userId.toString(), productType));
     }
 
+    /**
+     * Проверка, является ли пользователь активным пользователем продукта
+     *
+     * @param productType тип продукта
+     * @param userId      идентификатор пользователя
+     * @return true если пользователь является активным пользователем продукта
+     */
     @Cacheable("activeUserOfCache")
     public boolean activeUserOf(String productType, UUID userId) {
         String sql = "SELECT COUNT(*) >= 5 FROM transactions t " +
@@ -32,6 +55,16 @@ public class KnowledgeBaseService {
                 sql, Boolean.class, userId.toString(), productType));
     }
 
+    /**
+     * Сравнение суммы транзакций по определенным критериям
+     *
+     * @param productType     тип продукта
+     * @param transactionType тип транзакции
+     * @param operator        оператор сравнения
+     * @param value           значение для сравнения
+     * @param userId          идентификатор пользователя
+     * @return true если условие выполняется
+     */
     @Cacheable("transactionSumCompareCache")
     public boolean transactionSumCompare(String productType, String transactionType,
                                          String operator, int value, UUID userId) {
@@ -53,6 +86,14 @@ public class KnowledgeBaseService {
         };
     }
 
+    /**
+     * Сравнение сумм депозитов и выводов по продукту
+     *
+     * @param productType тип продукта
+     * @param operator    оператор сравнения
+     * @param userId      идентификатор пользователя
+     * @return true если условие выполняется
+     */
     @Cacheable("transactionSumCompareDepositWithdrawCache")
     public boolean transactionSumCompareDepositWithdraw(String productType,
                                                         String operator, UUID userId) {

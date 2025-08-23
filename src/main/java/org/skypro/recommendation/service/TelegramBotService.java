@@ -12,11 +12,25 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сервис Telegram бота для предоставления рекомендаций пользователям
+ * Обрабатывает команды и выдает персонализированные рекомендации
+ */
+
 @Service
 public class TelegramBotService extends TelegramLongPollingBot {
     private final RecommendationService recommendationService;
     private final UserService userService;
     private final String botUsername;
+
+    /**
+     * Конструктор сервиса Telegram бота
+     *
+     * @param recommendationService сервис рекомендаций
+     * @param userService           сервис пользователей
+     * @param botToken              токен бота
+     * @param botName               имя бота
+     */
 
     @Autowired
     public TelegramBotService(RecommendationService recommendationService,
@@ -29,6 +43,11 @@ public class TelegramBotService extends TelegramLongPollingBot {
         this.botUsername = botName;
     }
 
+    /**
+     * Обработка входящих сообщений
+     *
+     * @param update входящее сообщение
+     */
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -44,6 +63,12 @@ public class TelegramBotService extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Обработка команды /recommend
+     *
+     * @param chatId   ID чата
+     * @param username имя пользователя
+     */
     private void handleRecommendCommand(Long chatId, String username) {
         UUID userId = userService.findUserIdByUsername(username);
         if (userId == null) {
@@ -56,6 +81,13 @@ public class TelegramBotService extends TelegramLongPollingBot {
         sendMessage(chatId, response);
     }
 
+    /**
+     * Форматирование рекомендаций для отправки пользователю
+     *
+     * @param username        имя пользователя
+     * @param recommendations список рекомендаций
+     * @return отформатированный текст с рекомендациями
+     */
     private String formatRecommendations(String username, List<Recommendation> recommendations) {
         StringBuilder sb = new StringBuilder();
         sb.append("Здравствуйте ").append(username).append("\n\n");
@@ -72,12 +104,23 @@ public class TelegramBotService extends TelegramLongPollingBot {
         return sb.toString();
     }
 
+    /**
+     * Отправка справки по командам
+     *
+     * @param chatId ID чата
+     */
     private void sendHelpMessage(Long chatId) {
         String helpText = "Привет! Я бот для рекомендаций продуктов.\n\n" +
                 "Используйте команду /recommend username для получения рекомендаций";
         sendMessage(chatId, helpText);
     }
 
+    /**
+     * Отправка сообщения в чат
+     *
+     * @param chatId ID чата
+     * @param text   текст сообщения
+     */
     private void sendMessage(Long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
@@ -90,6 +133,11 @@ public class TelegramBotService extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Получение имени бота
+     *
+     * @return имя бота
+     */
     @Override
     public String getBotUsername() {
         return botUsername;
