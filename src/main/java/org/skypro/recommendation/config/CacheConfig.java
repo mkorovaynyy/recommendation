@@ -1,6 +1,5 @@
 package org.skypro.recommendation.config;
 
-
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -10,10 +9,19 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Конфигурация кэширования приложения
+ * Настраивает кэш на основе Caffeine с ограничением по размеру и времени жизни записей
+ */
 @Configuration
 @EnableCaching
 public class CacheConfig {
 
+    /**
+     * Конфигурация параметров кэша Caffeine
+     *
+     * @return настроенный экземпляр Caffeine
+     */
     @Bean
     public Caffeine<Object, Object> caffeineConfig() {
         return Caffeine.newBuilder()
@@ -21,6 +29,12 @@ public class CacheConfig {
                 .maximumSize(500);
     }
 
+    /**
+     * Создание менеджера кэша на основе Caffeine
+     *
+     * @param caffeine конфигурация Caffeine
+     * @return менеджер кэша
+     */
     @Bean
     public CacheManager cacheManager(Caffeine<Object, Object> caffeine) {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();

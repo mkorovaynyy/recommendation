@@ -12,15 +12,30 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Контроллер для обработки запросов рекомендаций
+ * Предоставляет endpoint для получения рекомендаций по ID пользователя
+ */
 @RestController
 @RequestMapping("/recommendation")
 public class RecommendationController {
     private final RecommendationService recommendationService;
 
+    /**
+     * Конструктор контроллера рекомендаций
+     *
+     * @param recommendationService сервис для получения рекомендаций
+     */
     public RecommendationController(RecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
 
+    /**
+     * Получение рекомендаций для пользователя
+     *
+     * @param userId ID пользователя в формате строки
+     * @return ответ с рекомендациями или ошибка 400 при неверном формате ID
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<RecommendationResponse> getRecommendations(
             @PathVariable String userId) {

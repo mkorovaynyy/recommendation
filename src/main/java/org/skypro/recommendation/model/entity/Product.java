@@ -2,12 +2,17 @@ package org.skypro.recommendation.model.entity;
 
 import java.util.UUID;
 
+/**
+ * Сущность продукта
+ * Представляет финансовый продукт в системе
+ */
 public class Product {
     private UUID id;
     private String name;
     private String description;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(UUID id, String name, String description) {
         this.id = id;

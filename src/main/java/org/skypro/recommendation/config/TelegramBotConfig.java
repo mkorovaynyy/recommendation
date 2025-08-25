@@ -7,6 +7,10 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+/**
+ * Конфигурация Telegram бота
+ * Настраивает соединение с Telegram API
+ */
 @Configuration
 public class TelegramBotConfig {
 
@@ -16,6 +20,12 @@ public class TelegramBotConfig {
     @Value("${telegram.bot.name}")
     private String botName;
 
+    /**
+     * Создание бина TelegramBotsApi
+     *
+     * @return TelegramBotsApi для работы с Telegram API
+     * @throws TelegramApiException если возникла ошибка при создании API
+     */
     @Bean
     public TelegramBotsApi telegramBotsApi() throws TelegramApiException {
         return new TelegramBotsApi(DefaultBotSession.class);

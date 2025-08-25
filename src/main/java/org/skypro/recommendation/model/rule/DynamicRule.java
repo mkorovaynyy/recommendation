@@ -7,6 +7,10 @@ import org.hibernate.annotations.Type;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сущность динамического правила рекомендаций
+ * Хранит информацию о правиле, продукте и счетчике срабатываний
+ */
 @Entity
 @Table(name = "dynamic_rule")
 public class DynamicRule {
@@ -30,16 +34,51 @@ public class DynamicRule {
     @Column(name = "counter")
     private Long counter = 0L;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
-    public UUID getProductId() { return productId; }
-    public void setProductId(UUID productId) { this.productId = productId; }
-    public String getProductText() { return productText; }
-    public void setProductText(String productText) { this.productText = productText; }
-    public List<RuleQuery> getRule() { return rule; }
-    public void setRule(List<RuleQuery> rule) { this.rule = rule; }
-    public Long getCounter() { return counter; }
-    public void setCounter(Long counter) { this.counter = counter; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public void setProductId(UUID productId) {
+        this.productId = productId;
+    }
+
+    public String getProductText() {
+        return productText;
+    }
+
+    public void setProductText(String productText) {
+        this.productText = productText;
+    }
+
+    public List<RuleQuery> getRule() {
+        return rule;
+    }
+
+    public void setRule(List<RuleQuery> rule) {
+        this.rule = rule;
+    }
+
+    public Long getCounter() {
+        return counter;
+    }
+
+    public void setCounter(Long counter) {
+        this.counter = counter;
+    }
 }

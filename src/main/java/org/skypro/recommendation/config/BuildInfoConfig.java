@@ -6,9 +6,18 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
 
+/**
+ * Конфигурация для создания бина BuildProperties
+ * Обеспечивает информацию о сборке приложения
+ */
 @Configuration
 public class BuildInfoConfig {
 
+    /**
+     * Создание бина BuildProperties
+     *
+     * @return BuildProperties с информацией о сборке
+     */
     @Bean
     public BuildProperties buildProperties() {
         Properties properties = new Properties();
