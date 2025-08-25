@@ -1,0 +1,28 @@
+
+## Диаграммы (diagrams/)
+
+### use-case-diagram.puml
+```plantuml
+@startuml
+left to right direction
+
+actor Менеджер
+actor Пользователь
+actor "Внешняя система" as ExternalSystem
+
+rectangle Сервис_рекомендаций {
+  usecase "Управление динамическими правилами" as UC1
+  usecase "Просмотр статистики срабатываний" as UC2
+  usecase "Получение рекомендаций через API" as UC3
+  usecase "Получение рекомендаций через бота" as UC4
+  usecase "Сброс кэша" as UC5
+  usecase "Получение информации о сервисе" as UC6
+}
+
+Менеджер --> UC1
+Менеджер --> UC2
+Пользователь --> UC3
+Пользователь --> UC4
+ExternalSystem --> UC5
+ExternalSystem --> UC6
+@enduml

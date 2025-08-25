@@ -58,8 +58,13 @@ public class RuleStatsController {
             this.stats = stats;
         }
 
-        public List<RuleStat> getStats() { return stats; }
-        public void setStats(List<RuleStat> stats) { this.stats = stats; }
+        public List<RuleStat> getStats() {
+            return stats;
+        }
+
+        public void setStats(List<RuleStat> stats) {
+            this.stats = stats;
+        }
     }
 
     /**
@@ -73,16 +78,27 @@ public class RuleStatsController {
          * Конструктор статистики правила
          *
          * @param ruleId идентификатор правила
-         * @param count количество срабатываний
+         * @param count  количество срабатываний
          */
         public RuleStat(Long ruleId, Long count) {
             this.rule_id = ruleId;
             this.count = count;
         }
 
-        public Long getRule_id() { return rule_id; }
-        public void setRule_id(Long rule_id) { this.rule_id = rule_id; }
-        public Long getCount() { return count; }
-        public void setCount(Long count) { this.count = count; }
+        public Long getRule_id() {
+            return rule_id;
+        }
+
+        public void setRule_id(Long rule_id) {
+            this.rule_id = rule_id;
+        }
+
+        public Long getCount() {
+            return count;
+        }
+
+        public void setCount(Long count) {
+            this.count = count;
+        }
     }
 }
