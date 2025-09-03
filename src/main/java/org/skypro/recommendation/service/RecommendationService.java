@@ -1,6 +1,8 @@
 package org.skypro.recommendation.service;
 
+import org.skypro.recommendation.exception.InvalidUserIdException;
 import org.skypro.recommendation.model.dto.Recommendation;
+import org.skypro.recommendation.model.dto.RecommendationResponse;
 import org.skypro.recommendation.model.rule.DynamicRule;
 import org.skypro.recommendation.model.rule.RuleQuery;
 import org.skypro.recommendation.repository.ProductRepository;
@@ -208,5 +210,21 @@ public class RecommendationService {
         List<Function<UUID, Boolean>> rules = productRules.get(productId);
         if (rules == null) return false;
         return rules.stream().allMatch(rule -> rule.apply(userId));
+    }
+    /**
+     * Получение рекомендаций для пользователя (публичный метод для контроллера)
+     *
+     * @param userId идентификатор пользователя в формате строки
+     * @return ответ с рекомендациями
+     * @throws InvalidUserIdException если передан некорректный формат ID пользователя
+     */
+    public RecommendationResponse getRecommendations(String userId) {
+        try {
+            UUID uuid = UUID.fromString(userId);
+            List<Recommendation> recommendations = getRecommendations(uuid);
+            return new RecommendationResponse(userId, recommendations);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidUserIdException("Invalid user ID format: " + userId);
+        }
     }
 }

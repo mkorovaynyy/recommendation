@@ -1,8 +1,7 @@
 package org.skypro.recommendation.controller;
 
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.cache.CacheManager;
-import org.springframework.http.ResponseEntity;
+import org.skypro.recommendation.service.ManagementService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,33 +13,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/management")
 public class ManagementController {
-    private final CacheManager cacheManager;
-    private final BuildProperties buildProperties;
+    private final ManagementService managementService;
 
     /**
      * Конструктор контроллера управления
      *
-     * @param cacheManager    менеджер кэша
-     * @param buildProperties свойства сборки
+     * @param managementService сервис для операций управления
      */
-    public ManagementController(CacheManager cacheManager, BuildProperties buildProperties) {
-        this.cacheManager = cacheManager;
-        this.buildProperties = buildProperties;
+    public ManagementController(ManagementService managementService) {
+        this.managementService = managementService;
     }
 
     /**
      * Сброс всех кэшей
-     *
-     * @return ResponseEntity с статусом OK
      */
     @PostMapping("/clear-caches")
-    public ResponseEntity<Void> clearCaches() {
-        cacheManager.getCacheNames().forEach(name -> {
-            if (cacheManager.getCache(name) != null) {
-                cacheManager.getCache(name).clear();
-            }
-        });
-        return ResponseEntity.ok().build();
+    @ResponseStatus(HttpStatus.OK)
+    public void clearCaches() {
+        managementService.clearCaches();
     }
 
     /**
@@ -49,10 +39,8 @@ public class ManagementController {
      * @return информация о названии и версии сервиса
      */
     @GetMapping("/info")
-    public ResponseEntity<Map<String, String>> getInfo() {
-        return ResponseEntity.ok(Map.of(
-                "name", buildProperties.getName(),
-                "version", buildProperties.getVersion()
-        ));
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, String> getInfo() {
+        return managementService.getInfo();
     }
 }

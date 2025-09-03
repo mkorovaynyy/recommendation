@@ -1,14 +1,13 @@
 package org.skypro.recommendation.controller.rule;
 
-import org.skypro.recommendation.model.rule.DynamicRule;
-import org.skypro.recommendation.repository.rule.DynamicRuleRepository;
-import org.springframework.http.ResponseEntity;
+import org.skypro.recommendation.service.RuleStatsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Контроллер для получения статистики правил
@@ -17,15 +16,15 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/rule")
 public class RuleStatsController {
-    private final DynamicRuleRepository dynamicRuleRepository;
+    private final RuleStatsService ruleStatsService;
 
     /**
      * Конструктор контроллера статистики правил
      *
-     * @param dynamicRuleRepository репозиторий динамических правил
+     * @param ruleStatsService сервис для работы со статистикой правил
      */
-    public RuleStatsController(DynamicRuleRepository dynamicRuleRepository) {
-        this.dynamicRuleRepository = dynamicRuleRepository;
+    public RuleStatsController(RuleStatsService ruleStatsService) {
+        this.ruleStatsService = ruleStatsService;
     }
 
     /**
@@ -34,26 +33,14 @@ public class RuleStatsController {
      * @return статистика срабатываний всех правил
      */
     @GetMapping("/stats")
-    public ResponseEntity<RuleStatsResponse> getStats() {
-        List<DynamicRule> rules = dynamicRuleRepository.findAll();
-        List<RuleStat> stats = rules.stream()
-                .map(rule -> new RuleStat(rule.getId(), rule.getCounter()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new RuleStatsResponse(stats));
+    @ResponseStatus(HttpStatus.OK)
+    public RuleStatsResponse getStats() {
+        return ruleStatsService.getStats();
     }
 
-    /**
-     * Ответ со статистикой правил
-     */
     public static class RuleStatsResponse {
         private List<RuleStat> stats;
 
-        /**
-         * Конструктор ответа со статистикой
-         *
-         * @param stats список статистики по правилам
-         */
         public RuleStatsResponse(List<RuleStat> stats) {
             this.stats = stats;
         }
@@ -67,19 +54,10 @@ public class RuleStatsController {
         }
     }
 
-    /**
-     * Статистика по одному правилу
-     */
     public static class RuleStat {
         private Long rule_id;
         private Long count;
 
-        /**
-         * Конструктор статистики правила
-         *
-         * @param ruleId идентификатор правила
-         * @param count  количество срабатываний
-         */
         public RuleStat(Long ruleId, Long count) {
             this.rule_id = ruleId;
             this.count = count;
