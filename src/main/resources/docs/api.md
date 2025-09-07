@@ -1,237 +1,222 @@
-Базовый URL
-http://localhost:8080
-
-# Эндпоинты рекомендаций
-
-# Получение рекомендаций для пользователя
-
-## GET /recommendation/{userId}
-
-Получение персонализированных рекомендаций продуктов для указанного пользователя.
-
-Параметры
-`userId (path, string, обязательный)` - UUID пользователя в строковом формате
-
-Ответ
-200 OK: Успешный запрос, возвращает список рекомендаций
-
-`{
-"userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-"recommendations": [
-{
-"name": "Инвестиционный счет",
-"id": "147f6a0f-3b91-413b-ab99-87f081d60d5a",
-"text": "Откройте инвестиционный счет для получения дополнительного дохода"
-},
-{
-"name": "Накопительный счет",
-"id": "59efc529-2fff-41af-baff-90ccd7402925",
-"text": "Накопительный счет с повышенной процентной ставкой"
-}
-]
-}`
-400 Bad Request: Неверный формат UUID пользователя
-
-404 Not Found: Пользователь не найден
-
-# Эндпоинты управления правилами
-
-## Получение всех динамических правил
-
-GET /rule
-
-# Получение списка всех динамических правил рекомендаций.
-
-Ответ
-200 OK: Успешный запрос, возвращает список правил
-
-json
-`[
-{
-"id": 1,
-"productName": "Инвестиционный счет",
-"productId": "147f6a0f-3b91-413b-ab99-87f081d60d5a",
-"productText": "Откройте инвестиционный счет для получения дополнительного дохода",
-"rule": [
-{
-"query": "USER_OF",
-"arguments": ["DEBIT"],
-"negate": false
-}
-],
-"counter": 15
-}
-]`
-
-# Создание нового динамического правила
-
-POST /rule
-
-## Создание нового динамического правила рекомендаций.
-
-Тело запроса
-json
-`{
-"productName": "Новый продукт",
-"productId": "ab138afb-f3ba-4a93-b74f-0fcee86d447f",
-"productText": "Описание нового продукта",
-"rule": [
-{
-"query": "ACTIVE_USER_OF",
-"arguments": ["CREDIT"],
-"negate": true
-}
-]
-}`
-Ответ
-200 OK: Правило успешно создано, возвращает созданное правило
-
-json
-`{
-"id": 2,
-"productName": "Новый продукт",
-"productId": "ab138afb-f3ba-4a93-b74f-0fcee86d447f",
-"productText": "Описание нового продукта",
-"rule": [
-{
-"query": "ACTIVE_USER_OF",
-"arguments": ["CREDIT"],
-"negate": true
-}
-],
-"counter": 0
-}`
-400 Bad Request: Неверный формат данных
-
-# Удаление динамического правила
-
-DELETE /rule/{productId}
-
-## Удаление динамического правила по идентификатору продукта.
-
-Параметры
-`productId (path, string, обязательный)` - UUID продукта в строковом формате
-
-Ответ
-204 No Content: Правило успешно удалено
-
-404 Not Found: Правило не найдено
-
-# Получение статистики срабатываний правил
-
-GET /rule/stats
-
-## Получение статистики срабатываний всех динамических правил.
-
-Ответ
-200 OK: Успешный запрос, возвращает статистику правил
-
-json
-`{
-"stats": [
-{
-"rule_id": 1,
-"count": 15
-},
-{
-"rule_id": 2,
-"count": 3
-},
-{
-"rule_id": 3,
-"count": 0
-}
-]
-}`
-
-# Эндпоинты управления сервисом
-
-## Сброс кэша
-
-POST /management/clear-caches
-
-## Сброс всех закешированных данных в системе.
-
-Ответ
-200 OK: Кэш успешно сброшен
-
-## Получение информации о сервисе
-
-GET /management/info
-
-## Получение основной информации о сервисе (название и версия).
-
-Ответ
-200 OK: Успешный запрос, возвращает информацию о сервисе
-
-json
-`{
-"name": "recommendation-service",
-"version": "1.0.0"
-}`
-
-# Форматы запросов и ответов
-
-# Формат UUID
-
-## Все идентификаторы передаются в формате UUID версии 4:
-
-# text
-
-a1b2c3d4-e5f6-7890-abcd-ef1234567890
-
-# Формат дат и времени
-
-# Даты и время передаются в формате ISO 8601:
-
-# text
-
-2023-12-01T10:30:00Z
-
-# Коды ошибок
-
-400 Bad Request: Неверный формат запроса
-
-404 Not Found: Ресурс не найден
-
-500 Internal Server Error: Внутренняя ошибка сервера
-
-# Примеры использования
-
-# Получение рекомендаций для пользователя
-
-bash
-curl -X GET "http://localhost:8080/recommendation/a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-
-# Создание нового правила
-
-bash
-curl -X POST "http://localhost:8080/rule" \
--H "Content-Type: application/json" \
--d '{
-"productName": "Новый продукт",
-"productId": "ab138afb-f3ba-4a93-b74f-0fcee86d447f",
-"productText": "Описание нового продукта",
-"rule": [
-{
-"query": "ACTIVE_USER_OF",
-"arguments": ["CREDIT"],
-"negate": true
-}
-]
-}'
-
-# Получение статистики правил
-
-bash
-curl -X GET "http://localhost:8080/rule/stats"
-
-# Сброс кэша
-
-bash
-curl -X POST "http://localhost:8080/management/clear-caches"
-
-# Получение информации о сервисе
-
-bash
-curl -X GET "http://localhost:8080/management/info"
+openapi: 3.0.0
+info:
+title: Recommendation Service API
+description: API для системы рекомендаций финансовых продуктов
+version: 1.0.0
+
+servers:
+- url: http://localhost:8080
+  description: Development server
+
+paths:
+/recommendation/{userId}:
+get:
+summary: Получить рекомендации для пользователя
+description: Возвращает список рекомендованных финансовых продуктов для указанного пользователя
+parameters:
+- name: userId
+in: path
+required: true
+description: UUID пользователя
+schema:
+type: string
+format: uuid
+example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+responses:
+'200':
+description: Успешный ответ с рекомендациями
+content:
+application/json:
+schema:
+$ref: '#/components/schemas/RecommendationResponse'
+'400':
+description: Неверный формат UUID пользователя
+'500':
+description: Внутренняя ошибка сервера
+
+/rule:
+post:
+summary: Создать новое правило
+description: Создает новое динамическое правило для рекомендаций
+requestBody:
+required: true
+content:
+application/json:
+schema:
+$ref: '#/components/schemas/DynamicRule'
+responses:
+'201':
+description: Правило успешно создано
+content:
+application/json:
+schema:
+$ref: '#/components/schemas/DynamicRule'
+'400':
+description: Неверные данные правила
+'500':
+description: Внутренняя ошибка сервера
+get:
+summary: Получить все правила
+description: Возвращает список всех динамических правил
+responses:
+'200':
+description: Успешный ответ со списком правил
+content:
+application/json:
+schema:
+type: array
+items:
+$ref: '#/components/schemas/DynamicRule'
+'500':
+description: Внутренняя ошибка сервера
+
+/rule/{productId}:
+delete:
+summary: Удалить правило по ID продукта
+description: Удаляет динамическое правило, связанное с указанным продуктом
+parameters:
+- name: productId
+in: path
+required: true
+description: UUID продукта
+schema:
+type: string
+format: uuid
+example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+responses:
+'204':
+description: Правило успешно удалено
+'404':
+description: Правило для указанного продукта не найдено
+'500':
+description: Внутренняя ошибка сервера
+
+/rule/stats:
+get:
+summary: Получить статистику правил
+description: Возвращает статистику срабатываний всех динамических правил
+responses:
+'200':
+description: Успешный ответ со статистикой
+content:
+application/json:
+schema:
+$ref: '#/components/schemas/RuleStatsResponse'
+'500':
+description: Внутренняя ошибка сервера
+
+/management/clear-caches:
+post:
+summary: Очистить кэши
+description: Очищает все кэши приложения
+responses:
+'200':
+description: Кэши успешно очищены
+'500':
+description: Внутренняя ошибка сервера
+
+/management/info:
+get:
+summary: Получить информацию о сервисе
+description: Возвращает основную информацию о сервисе (название и версию)
+responses:
+'200':
+description: Успешный ответ с информацией о сервисе
+content:
+application/json:
+schema:
+type: object
+properties:
+name:
+type: string
+example: "recommendation-service"
+version:
+type: string
+example: "1.0.0"
+'500':
+description: Внутренняя ошибка сервера
+
+components:
+schemas:
+RecommendationResponse:
+type: object
+properties:
+userId:
+type: string
+format: uuid
+example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+recommendations:
+type: array
+items:
+$ref: '#/components/schemas/Recommendation'
+
+    Recommendation:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Инвестиционный продукт 'Старт'"
+        id:
+          type: string
+          format: uuid
+          example: "147f6a0f-3b91-413b-ab99-87f081d60d5a"
+        text:
+          type: string
+          example: "Идеально подходит для начала инвестирования"
+
+    DynamicRule:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        productName:
+          type: string
+          example: "Премиальная кредитная карта"
+        productId:
+          type: string
+          format: uuid
+          example: "ab138afb-f3ba-4a93-b74f-0fcee86d447f"
+        productText:
+          type: string
+          example: "Кредитная карта с повышенным кэшбэком"
+        rule:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleQuery'
+        counter:
+          type: integer
+          example: 42
+
+    RuleQuery:
+      type: object
+      properties:
+        query:
+          type: string
+          example: "USER_OF"
+        arguments:
+          type: array
+          items:
+            type: string
+          example: ["DEBIT"]
+        negate:
+          type: boolean
+          example: false
+
+    RuleStatsResponse:
+      type: object
+      properties:
+        stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleStat'
+
+    RuleStat:
+      type: object
+      properties:
+        rule_id:
+          type: integer
+          example: 1
+        count:
+          type: integer
+          example: 42
