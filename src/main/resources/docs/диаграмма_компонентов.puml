@@ -1,0 +1,50 @@
+@startuml
+
+package "Рекомендационный сервис" {
+[RecommendationController] as RC
+[RuleController] as RLC
+[RuleStatsController] as RSC
+[ManagementController] as MC
+
+[RecommendationService] as RS
+[KnowledgeBaseService] as KBS
+[RuleService] as RLS
+[RuleStatsService] as RSS
+[ManagementService] as MS
+[UserService] as US
+[TelegramBotService] as TBS
+
+[ProductRepository] as PR
+[DynamicRuleRepository] as DRR
+}
+
+package "Базы данных" {
+[Основная БД] as MainDB
+[БД правил] as RulesDB
+}
+
+package "Внешние сервисы" {
+[Telegram API] as TA
+}
+
+RC --> RS : использует
+RLC --> RLS : использует
+RSC --> RSS : использует
+MC --> MS : использует
+TBS --> RS : использует
+TBS --> US : использует
+
+RS --> KBS : использует
+RS --> PR : использует
+RS --> DRR : использует
+
+KBS --> MainDB : запросы
+PR --> MainDB : запросы
+US --> MainDB : запросы
+RLS --> DRR : использует
+RSS --> DRR : использует
+DRR --> RulesDB : запросы
+
+TBS --> TA : взаимодействует
+
+@enduml

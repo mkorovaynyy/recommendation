@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+
+actor Пользователь
+actor Администратор
+actor "Telegram-бот" as Bot
+
+rectangle "Система рекомендаций" {
+usecase "Получить рекомендации" as UC1
+usecase "Управление правилами" as UC2
+usecase "Просмотр статистики" as UC3
+usecase "Очистка кэша" as UC4
+usecase "Получить информацию о сервисе" as UC5
+}
+
+Пользователь --> UC1
+Администратор --> UC2
+Администратор --> UC3
+Администратор --> UC4
+Администратор --> UC5
+Пользователь --> Bot
+Bot --> UC1
+
+@enduml
